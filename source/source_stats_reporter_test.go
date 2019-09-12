@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package metrics
+package source
 
 import (
 	"net/http"
@@ -33,13 +33,13 @@ func unregister() {
 }
 
 func TestStatsReporter(t *testing.T) {
-	t.Skip("Fails in PROW but not locally, needs further investigation")
+	t.Skip("Fails in PROW but not locally, possibly due to the webhook stats_reporter test. Needs further investigation.")
 
 	args := &ReportArgs{
 		Namespace:     "testns",
 		EventType:     "dev.knative.event",
 		EventSource:   "unit-test",
-		Name:          "testimporter",
+		Name:          "testsource",
 		ResourceGroup: "testresourcegroup",
 	}
 
@@ -52,13 +52,13 @@ func TestStatsReporter(t *testing.T) {
 	defer unregister()
 
 	wantTags := map[string]string{
-		metricskey.LabelNamespaceName:         "testns",
-		metricskey.LabelEventType:             "dev.knative.event",
-		metricskey.LabelEventSource:           "unit-test",
-		metricskey.LabelImporterName:          "testimporter",
-		metricskey.LabelImporterResourceGroup: "testresourcegroup",
-		metricskey.LabelResponseCode:          "202",
-		metricskey.LabelResponseCodeClass:     "2xx",
+		metricskey.LabelNamespaceName:       "testns",
+		metricskey.LabelEventType:           "dev.knative.event",
+		metricskey.LabelEventSource:         "unit-test",
+		metricskey.LabelSourceName:          "testsource",
+		metricskey.LabelSourceResourceGroup: "testresourcegroup",
+		metricskey.LabelResponseCode:        "202",
+		metricskey.LabelResponseCodeClass:   "2xx",
 	}
 
 	// test ReportEventCount
