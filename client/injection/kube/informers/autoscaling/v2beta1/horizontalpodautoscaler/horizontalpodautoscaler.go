@@ -21,6 +21,7 @@ package horizontalpodautoscaler
 import (
 	context "context"
 
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	v2beta1 "k8s.io/client-go/informers/autoscaling/v2beta1"
 	factory "knative.dev/pkg/client/injection/kube/informers/factory"
 	controller "knative.dev/pkg/controller"
@@ -29,7 +30,13 @@ import (
 )
 
 func init() {
-	injection.Default.RegisterInformer(withInformer)
+	injection.Default.RegisterInformer(
+		withInformer,
+		metav1.GroupVersionResource{
+			Group:    "autoscaling",
+			Version:  "v2beta1",
+			Resource: "horizontalpodautoscalers",
+		})
 }
 
 // Key is used for associating the Informer inside the context.Context.

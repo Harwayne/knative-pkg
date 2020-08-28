@@ -21,6 +21,7 @@ package fake
 import (
 	context "context"
 
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	validatingwebhookconfiguration "knative.dev/pkg/client/injection/kube/informers/admissionregistration/v1beta1/validatingwebhookconfiguration"
 	fake "knative.dev/pkg/client/injection/kube/informers/factory/fake"
 	controller "knative.dev/pkg/controller"
@@ -30,7 +31,13 @@ import (
 var Get = validatingwebhookconfiguration.Get
 
 func init() {
-	injection.Fake.RegisterInformer(withInformer)
+	injection.Fake.RegisterInformer(
+		withInformer,
+		metav1.GroupVersionResource{
+			Group:    "admissionregistration.k8s.io",
+			Version:  "v1beta1",
+			Resource: "validatingwebhookconfigurations",
+		})
 }
 
 func withInformer(ctx context.Context) (context.Context, controller.Informer) {

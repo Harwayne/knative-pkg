@@ -21,6 +21,7 @@ package fake
 import (
 	context "context"
 
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	fake "knative.dev/pkg/client/injection/kube/informers/factory/fake"
 	role "knative.dev/pkg/client/injection/kube/informers/rbac/v1/role"
 	controller "knative.dev/pkg/controller"
@@ -30,7 +31,13 @@ import (
 var Get = role.Get
 
 func init() {
-	injection.Fake.RegisterInformer(withInformer)
+	injection.Fake.RegisterInformer(
+		withInformer,
+		metav1.GroupVersionResource{
+			Group:    "rbac.authorization.k8s.io",
+			Version:  "v1",
+			Resource: "roles",
+		})
 }
 
 func withInformer(ctx context.Context) (context.Context, controller.Informer) {

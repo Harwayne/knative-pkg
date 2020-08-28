@@ -21,6 +21,7 @@ package fake
 import (
 	context "context"
 
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	podtemplate "knative.dev/pkg/client/injection/kube/informers/core/v1/podtemplate"
 	fake "knative.dev/pkg/client/injection/kube/informers/factory/fake"
 	controller "knative.dev/pkg/controller"
@@ -30,7 +31,13 @@ import (
 var Get = podtemplate.Get
 
 func init() {
-	injection.Fake.RegisterInformer(withInformer)
+	injection.Fake.RegisterInformer(
+		withInformer,
+		metav1.GroupVersionResource{
+			Group:    "core",
+			Version:  "v1",
+			Resource: "podtemplates",
+		})
 }
 
 func withInformer(ctx context.Context) (context.Context, controller.Informer) {

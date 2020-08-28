@@ -19,6 +19,7 @@ package fake
 import (
 	context "context"
 
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	controller "knative.dev/pkg/controller"
 	injection "knative.dev/pkg/injection"
 	secret "knative.dev/pkg/injection/clients/namespacedkube/informers/core/v1/secret"
@@ -28,7 +29,13 @@ import (
 var Get = secret.Get
 
 func init() {
-	injection.Fake.RegisterInformer(withInformer)
+	injection.Fake.RegisterInformer(
+		withInformer,
+		metav1.GroupVersionResource{
+			Group:    "",
+			Version:  "v1",
+			Resource: "secrets",
+		})
 }
 
 func withInformer(ctx context.Context) (context.Context, controller.Informer) {
