@@ -20,6 +20,7 @@ import (
 	"context"
 	"testing"
 
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/rest"
 
 	"knative.dev/pkg/controller"
@@ -58,8 +59,8 @@ func TestRegisterInformersAndSetup(t *testing.T) {
 	i.RegisterInformerFactory(injectFooFactory)
 	i.RegisterInformerFactory(injectBarFactory)
 
-	i.RegisterInformer(injectFooInformer)
-	i.RegisterInformer(injectBarInformer)
+	i.RegisterInformer(injectFooInformer, metav1.GroupVersionResource{})
+	i.RegisterInformer(injectBarInformer, metav1.GroupVersionResource{})
 
 	_, infs := i.SetupInformers(context.Background(), &rest.Config{})
 
